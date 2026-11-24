@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Extract Colors</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; text-align: center; }
+        img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
+        .color { display: flex; align-items: center; margin: 8px 0; text-align: left; }
+        .box { width: 60px; height: 40px; border-radius: 6px; margin-right: 15px; border: 1px solid #ccc; }
+        .error { color: red; }
+    </style>
+
 </head>
 <body>
-    
+    <h1>Image Color Extractor</h1>
+    <p>Upload an image to see its 10 most common colors.</p>
+
+     <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Extract Colors</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if preview %}
+        <img src="data:image/jpeg;base64,{{ preview }}" alt="Uploaded image">
+    {% endif %}
+
+    {% if colors %}
+        <h2>Top 10 Colors</h2>
+        {% for c in colors %}
+            <div class="color">
+                <div class="box" style="background: {{ c.hex }};"></div>
+                <span>{{ c.hex }} &nbsp;({{ c.percent }}%)</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 
     
 </body>
