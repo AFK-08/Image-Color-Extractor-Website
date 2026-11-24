@@ -35,13 +35,10 @@
         <h2>Top 10 Colors</h2>
         {% for c in colors %}
             <div class="color">
-                <div class="box" style="background: {{ c.hex }};"></div>
+                <div class="box" data-color="{{ c.hex }}"></div>
                 <span>{{ c.hex }} &nbsp;({{ c.percent }}%)</span>
             </div>
         {% endfor %}
     {% endif %}
-
-
-    
 </body>
 </html>
