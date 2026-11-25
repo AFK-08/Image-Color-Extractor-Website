@@ -7,27 +7,27 @@ from io import BytesIO
 app = Flask(__name__)
 
 def get_top_colors(image, count=10):
+    image = image.convert("RGB")
+    image.thumbnail((200, 200))  
 
-    image = image.convert("RGB")          
-    image.thumbnail((200, 200))
-    pixels = np.array(image).reshape(-1, 3)
-    pixels = (pixels // 16) * 16 + 8
+    small = image.quantize(colors=count, method=Image.Quantize.MEDIANCUT)
+    palette = np.array(small.getpalette()[:count * 3]).reshape(-1, 3)
 
-    ## Count how many times each color appears
-
-    colors, counts = np.unique(pixels, axis=0, return_counts=True)
-
-    ## Sort from most common to least common and keep the top ones
-
-    order = np.argsort(counts)[::-1][:count]
+    counts = np.bincount(np.array(small).flatten(), minlength=len(palette))[:len(palette)]
     total = counts.sum()
+
+    # Sort from most common to least common
+    
+    order = np.argsort(counts)[::-1]
 
     result = []
     for i in order:
-        r, g, b = (int(v) for v in colors[i])
+        if counts[i] == 0:
+            continue
+        r, g, b = (int(v) for v in palette[i])
         result.append({
             "hex": f"#{r:02x}{g:02x}{b:02x}",
-            "percent": round(counts[i] / total * 100, 1),
+            "percent": round(float(counts[i] / total * 100), 1),
         })
     return result
 

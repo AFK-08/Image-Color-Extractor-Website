@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extract Colors</title>
-
+    <title>Image Color Extractor</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; text-align: center; }
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; text-align: center; background: #f3efff; }
+        h1 { color: #6c3ce0; }
+        button { background: #6c3ce0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #5127b8; }
         img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
-        .color { display: flex; align-items: center; margin: 8px 0; text-align: left; }
+        .color { display: flex; align-items: center; margin: 8px 0; text-align: left; cursor: pointer; }
+        .color:hover { background: #e4dbff; }
         .box { width: 60px; height: 40px; border-radius: 6px; margin-right: 15px; border: 1px solid #ccc; }
         .error { color: red; }
     </style>
-
 </head>
 <body>
     <h1>Image Color Extractor</h1>
     <p>Upload an image to see its 10 most common colors.</p>
 
-     <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required>
         <button type="submit">Extract Colors</button>
     </form>
@@ -33,12 +33,20 @@
 
     {% if colors %}
         <h2>Top 10 Colors</h2>
+        <p><small>Click a color to copy its code</small></p>
         {% for c in colors %}
-            <div class="color">
+            <div class="color" onclick="copyColor('{{ c.hex }}')">
                 <div class="box" data-color="{{ c.hex }}"></div>
                 <span>{{ c.hex }} &nbsp;({{ c.percent }}%)</span>
             </div>
         {% endfor %}
     {% endif %}
+
+    <script>
+        function copyColor(hex) {
+            navigator.clipboard.writeText(hex);
+            alert("Copied " + hex);
+        }
+    </script>
 </body>
 </html>
