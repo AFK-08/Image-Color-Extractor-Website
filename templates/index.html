@@ -4,9 +4,9 @@
     <title>Image Color Extractor</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; text-align: center; background: #f3efff; }
-        h1 { color: #6c3ce0; }
-        button { background: #6c3ce0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-        button:hover { background: #5127b8; }
+        h1 { color: #afc535; }
+        button { background: #afc535; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #afc535; }
         img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
         .color { display: flex; align-items: center; margin: 8px 0; text-align: left; cursor: pointer; }
         .color:hover { background: #e4dbff; }
@@ -31,22 +31,28 @@
         <img src="data:image/jpeg;base64,{{ preview }}" alt="Uploaded image">
     {% endif %}
 
-    {% if colors %}
+        {% if colors %}
+        
         <h2>Top 10 Colors</h2>
         <p><small>Click a color to copy its code</small></p>
         {% for c in colors %}
-            <div class="color" onclick="copyColor('{{ c.hex }}')">
-                <div class="box" data-color="{{ c.hex }}"></div>
+            <div class="color" data-hex="{{ c.hex }}">
+                <div class="box"></div>
                 <span>{{ c.hex }} &nbsp;({{ c.percent }}%)</span>
             </div>
         {% endfor %}
     {% endif %}
 
     <script>
-        function copyColor(hex) {
-            navigator.clipboard.writeText(hex);
-            alert("Copied " + hex);
-        }
+        document.querySelectorAll(".color").forEach(function (row) {
+            var hex = row.dataset.hex;
+            row.querySelector(".box").style.backgroundColor = hex;
+            row.onclick = function () {                              
+                navigator.clipboard.writeText(hex);
+                alert("Copied " + hex);
+            };
+        });
     </script>
+
 </body>
 </html>
